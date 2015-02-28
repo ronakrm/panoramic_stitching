@@ -41,7 +41,7 @@ for i = 1:N
     imgmatrix = uint8(imread(char(imageloc)));
     
     %store in big images matrix
-    images(i,:,:,:) = uint8(imgmatrix);
+    images(N-i+1,:,:,:) = uint8(imgmatrix);
 
     imageloc %display most recently read-in image
 end
@@ -51,17 +51,21 @@ disp('All images read into memory.');
 
 %% Map to cylindrical projection
 mapped_images = mapCylindrical(images, focal_length);
-figure;image(squeeze(uint8(mapped_images(1,:,:,:))));
+%figure;image(squeeze(uint8(mapped_images(1,:,:,:))));
 
 bigim = zeros(size(images,2),size(images,3)*N,3);
 for i=1:N
-    bigim(1:512,1+(384*(i-1)):384*i,:) = mapped_images(N-i+1,1:512,1:384,:);
+    bigim(1:512,1+(384*(i-1)):384*i,:) = mapped_images(i,1:512,1:384,:);
 end
 
-figure;image(uint8(bigim));
+%figure;image(uint8(bigim));
+
+%% Delete black stuff
+%trimmed_mapped_images = trimm(mapped_images);
 
 %% Align and stitch mapped images
 cylinder = align_and_stich(mapped_images);
+figure; image(uint8(cylinder));
 
 %% Unwrap cylinder
 %output = unwrap(cylinder);
