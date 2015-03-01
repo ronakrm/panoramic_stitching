@@ -29,7 +29,7 @@ disp('Image info acquired.');
 %Initialize memory needed for all images
 images = uint8(zeros(N, height, width, 3));
 
-imagefiles = dir(strcat('inputs/',direc,'/*.jpg'));
+imagefiles = dir(strcat('inputs/',direc,'/*.JPG'));
 
 disp('Reading images into matrix memory...');
 for i = 1:N
@@ -50,25 +50,21 @@ toc %time reading in and scaling
 disp('All images read into memory.');
 
 %% Map to cylindrical projection
+disp('Mapping images to cylinder.');
 mapped_images = mapCylindrical(images, focal_length);
 %figure;image(squeeze(uint8(mapped_images(1,:,:,:))));
 
-bigim = zeros(size(images,2),size(images,3)*N,3);
-for i=1:N
-    bigim(1:512,1+(384*(i-1)):384*i,:) = mapped_images(i,1:512,1:384,:);
-end
-
-%figure;image(uint8(bigim));
-
-%% Delete black stuff
-%trimmed_mapped_images = trimm(mapped_images);
-
 %% Align and stitch mapped images
-cylinder = align_and_stich(mapped_images);
-figure; image(uint8(cylinder));
+disp('Aligning and stitching images.');
+[pano, offsetX, cumY, start_height] = align_and_stitch(mapped_images);
+figure; image(uint8(pano));
 
-%% Unwrap cylinder
-%output = unwrap(cylinder);
+%% Get drift
+[a, pano_end] = get_drift(mapped_images, offsetX, cumY);
+
+%% Crop and Correct Drift
+final_pano = harvest(pano, a, start_height, pano_end, size(mapped_images,2));
+figure; image(uint8(final_pano));
 
 %% Display final image
 %image(output);
