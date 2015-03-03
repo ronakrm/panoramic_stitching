@@ -1,6 +1,9 @@
 %PANORAMER Takes a set of images and makes a panorama
 %   Below is panorama code. works 100% of the time all the time
 
+%% Import SIFT things
+run('../vlfeat-0.9.20/toolbox/vl_setup');
+
 %% TIMER
 tic; %start stopwatch
 %% Set Parameters
@@ -20,7 +23,10 @@ direc = cell2mat(info(1));
 focal_length = str2num(cell2mat(info(2)));
 width = str2num(cell2mat(info(3)));
 height = str2num(cell2mat(info(4)));
-N = str2num(cell2mat(info(5)));
+%N = str2num(cell2mat(info(5)));
+
+% for testing
+N = 2;
 
 disp('Image info acquired.');
 
