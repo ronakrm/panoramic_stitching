@@ -8,8 +8,7 @@ alpha = 0.5;
 N = size(mapped_images,1);
 height = size(mapped_images,2);
 width = size(mapped_images,3);
-keyboard;
-pano_size = 0.75*width*N;
+pano_size = round(0.75*width*N);
 
 start_height = round((drift_multiplier-1)*height/2.0);
 start_width = 1;
@@ -48,11 +47,16 @@ for i=1:N-1
     old_offsetX = offsetX;
     old_offsetY = offsetY;
     
-    fa(1,m(1,:)) - fb(1,m(2,:))
-    fa(2,m(1,:)) - fb(2,m(2,:))
+    round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
+    round(mean(fa(2,m(1,:)) - fb(2,m(2,:))))
     
-    offsetX = old_offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
-    offsetY = round(mean(fa(2,m(1,:)) - fb(2,m(2,:)))) + 1
+    [offsetX, offsetY] = RANSAC(fa(:,m(1,:)), fb(:,m(2,:)))
+    
+    offsetX = round(offsetX) + old_offsetX;
+    offsetY = round(offsetY) + 1;
+    
+    %offsetX = old_offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
+    %offsetY = round(mean(fa(2,m(1,:)) - fb(2,m(2,:)))) + 1
     %compute interesting pixels
     
     % paste new image into pano

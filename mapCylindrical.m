@@ -13,8 +13,8 @@ fsq = focal_length*focal_length;
 for y=1:size(images,2)
     for x=1:size(images,3)
         
-        theta = atan((x)/focal_length);
-        h = (y)/sqrt((x)^2 + fsq);
+        theta = atan((x - xc)/focal_length);
+        h = (y - yc)/sqrt((x - xc)^2 + fsq);
         
         x_squiggly = round(s*theta + xc);
         y_squiggly = round(s*h + yc);
