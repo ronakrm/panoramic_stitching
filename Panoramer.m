@@ -21,12 +21,11 @@ disp(filename);
 [info] = textread(filename, '%s');
 direc = cell2mat(info(1));
 focal_length = str2num(cell2mat(info(2)));
-width = str2num(cell2mat(info(3)));
-height = str2num(cell2mat(info(4)));
-%N = str2num(cell2mat(info(5)));
-
-% for testing
-N = 2;
+k1 = str2num(cell2mat(info(3)));
+k2 = str2num(cell2mat(info(4)));
+width = str2num(cell2mat(info(5)));
+height = str2num(cell2mat(info(6)));
+N = str2num(cell2mat(info(7)));
 
 disp('Image info acquired.');
 
@@ -55,9 +54,12 @@ end
 toc %time reading in and scaling
 disp('All images read into memory.');
 
+%% Fix radial distortion
+undistorted = fix_distortion(images, focal_length, k1, k2);
+
 %% Map to cylindrical projection
 disp('Mapping images to cylinder.');
-mapped_images = mapCylindrical(images, focal_length);
+mapped_images = mapCylindrical(undistorted, focal_length);
 %figure;image(squeeze(uint8(mapped_images(1,:,:,:))));
 
 %% Align and stitch mapped images
@@ -70,7 +72,7 @@ figure; image(uint8(pano));
 
 %% Crop and Correct Drift
 final_pano = harvest(pano, a, start_height, pano_end, size(mapped_images,2));
-figure; image(uint8(final_pano));
+%figure; image(uint8(final_pano));
 
 %% Display final image
 %image(output);

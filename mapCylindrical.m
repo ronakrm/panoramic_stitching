@@ -18,6 +18,16 @@ for y=1:size(images,2)
         
         x_squiggly = round(s*theta + xc);
         y_squiggly = round(s*h + yc);
+
+%         theta = (x - xc)/focal_length;
+%         h = (y - yc)/focal_length;
+%         
+%         xhat = sin(theta);
+%         yhat = h;
+%         zhat = cos(theta);
+%         
+%         x_squiggly = ceil(focal_length*(xhat/zhat) + xc);
+%         y_squiggly = ceil(focal_length*(yhat/zhat) + yc);
         
         mapped(:,y_squiggly,x_squiggly,:) = images(:,y,x,:);
     end

@@ -2,10 +2,10 @@ function [ offsetX, offsetY ] = RANSAC( fa, fb )
 %RANSAC Summary of this function goes here
 %   Detailed explanation goes here
 
-P = 0.99;
+P = 0.9999;
 p = 0.5;
 n = 4;
-k = log(1-P)/log(1-p^n);
+k = log(1-P)/log(1-p^n)
 
 N = size(fa,2);
 
