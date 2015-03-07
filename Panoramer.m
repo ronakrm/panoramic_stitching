@@ -7,12 +7,10 @@ run('../vlfeat-0.9.20/toolbox/vl_setup');
 %% TIMER
 tic; %start stopwatch
 %% Set Parameters
+filename = 'inputs/testingImagesInfo.txt';
 
 %% File Setup
 disp('Beginning Panorama image construction from images in ./');
-
-filename = 'inputs/testingImagesInfo.txt';
-
 disp(filename);
 
 % read in the input info file
@@ -29,7 +27,7 @@ N = str2num(cell2mat(info(7)));
 
 disp('Image info acquired.');
 
-%% Read in images to MATLAB memory, set up sampling of scaled calibration points
+%% Read in images to MATLAB memory
 
 %Initialize memory needed for all images
 images = uint8(zeros(N, height, width, 3));

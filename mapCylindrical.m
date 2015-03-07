@@ -1,6 +1,9 @@
 function [ mapped ] = mapCylindrical( images, focal_length )
-%mapCylindrical Summary of this function goes here
-%   Detailed explanation goes here
+%mapCylindrical Map images to cylindrical coordinates
+%   focal length used to determine field of view for each image, image is
+%   mapped to that field of view
+
+% get center of image for calculations
 xc = size(images,3)/2;
 yc = size(images,2)/2;
 
@@ -13,9 +16,11 @@ fsq = focal_length*focal_length;
 for y=1:size(images,2)
     for x=1:size(images,3)
         
+        %calculate cylindrical coordinate for this xy-coord
         theta = atan((x - xc)/focal_length);
         h = (y - yc)/sqrt((x - xc)^2 + fsq);
         
+        %get point in new image to map old xy to
         x_squiggly = round(s*theta + xc);
         y_squiggly = round(s*h + yc);
 
