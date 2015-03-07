@@ -12,8 +12,8 @@ Ib = single(rgb2gray(squeeze(mapped_images(1,:,:,:))));
 
 [m, s] = vl_ubcmatch(da, db, 10);
 
-pano_end = offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
-cumY = cumY + round(mean(fa(2,m(1,:)) - fb(2,m(2,:))))
+pano_end = offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))));
+cumY = cumY + round(mean(fa(2,m(1,:)) - fb(2,m(2,:))));
 
 a = cumY/pano_end;
 

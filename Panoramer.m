@@ -70,7 +70,6 @@ figure; image(uint8(pano));
 
 %% Crop and Correct Drift
 final_pano = harvest(pano, a, start_height, pano_end, size(mapped_images,2));
-%figure; image(uint8(final_pano));
 
 %% Display final image
-%image(output);
+figure; image(uint8(final_pano));

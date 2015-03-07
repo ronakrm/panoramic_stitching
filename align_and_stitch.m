@@ -23,7 +23,7 @@ offsetX = 1;
 offsetY = start_height;
 
 for i=1:N-1
-    dispp = sprintf('Aligning image %d', i);
+    dispp = sprintf('Aligning image %d', i+1);
     disp(dispp);
 
     scan = pano(:,offsetX:size(pano,2),:);
@@ -36,8 +36,8 @@ for i=1:N-1
     [fa, da] = vl_sift(Ia);
     [fb, db] = vl_sift(Ib);
 
-    [m, s] = vl_ubcmatch(da, db, 5);
-    size(m)
+    [m, s] = vl_ubcmatch(da, db, 4);
+    
     %figure;image(uint8(scan));
     %ha = vl_plotframe(fa(:,m(1,:)));
     
@@ -47,18 +47,17 @@ for i=1:N-1
     old_offsetX = offsetX;
     old_offsetY = offsetY;
     
-    round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
-    round(mean(fa(2,m(1,:)) - fb(2,m(2,:))))
+    %round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
+    %round(mean(fa(2,m(1,:)) - fb(2,m(2,:))))
     
-%     [offsetX, offsetY] = RANSAC(fa(:,m(1,:)), fb(:,m(2,:)))
-%     
-%     offsetX = round(offsetX) + old_offsetX;
-%     offsetY = round(offsetY) + 1;
+    [offsetX, offsetY] = RANSAC(fa(:,m(1,:)), fb(:,m(2,:)));
     
-    offsetX = old_offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
-    offsetY = round(mean(fa(2,m(1,:)) - fb(2,m(2,:)))) + 1
-    %compute interesting pixels
+    offsetX = round(offsetX) + old_offsetX;
+    offsetY = round(offsetY) + 1;
     
+    %offsetX = old_offsetX + round(mean(fa(1,m(1,:)) - fb(1,m(2,:))))
+    %offsetY = round(mean(fa(2,m(1,:)) - fb(2,m(2,:)))) + 1
+        
     % paste new image into pano
     pano(offsetY:offsetY+height-1,offsetX:offsetX+width-1,:) = next_image;
     
@@ -78,7 +77,7 @@ for i=1:N-1
     
     % loop over overlap and do intelligent thigns
     for x=1:scanwidth
-        new_weight = 1;%((x-1)/(scanwidth-1));
+        new_weight = ((x-1)/(scanwidth-1));
         old_weight = 1 - new_weight;
         for y=1:scanheight
             old_pixel = prev_image(old_startY+y-1,old_startX+x-1,:);
