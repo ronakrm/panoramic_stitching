@@ -1,15 +1,16 @@
 %PANORAMER Takes a set of images and makes a panorama
 %   Below is panorama code. works 100% of the time all the time
 
+%% Import SIFT things
+run('../vlfeat-0.9.20/toolbox/vl_setup');
+
 %% TIMER
 tic; %start stopwatch
 %% Set Parameters
+filename = 'inputs/testingImagesInfo.txt';
 
 %% File Setup
 disp('Beginning Panorama image construction from images in ./');
-
-filename = 'inputs/testingImagesInfo.txt';
-
 disp(filename);
 
 % read in the input info file
@@ -18,18 +19,20 @@ disp(filename);
 [info] = textread(filename, '%s');
 direc = cell2mat(info(1));
 focal_length = str2num(cell2mat(info(2)));
-width = str2num(cell2mat(info(3)));
-height = str2num(cell2mat(info(4)));
-N = str2num(cell2mat(info(5)));
+k1 = str2num(cell2mat(info(3)));
+k2 = str2num(cell2mat(info(4)));
+width = str2num(cell2mat(info(5)));
+height = str2num(cell2mat(info(6)));
+N = str2num(cell2mat(info(7)));
 
 disp('Image info acquired.');
 
-%% Read in images to MATLAB memory, set up sampling of scaled calibration points
+%% Read in images to MATLAB memory
 
 %Initialize memory needed for all images
 images = uint8(zeros(N, height, width, 3));
 
-imagefiles = dir(strcat('inputs/',direc,'/*.jpg'));
+imagefiles = dir(strcat('inputs/',direc,'/*.JPG'));
 
 disp('Reading images into matrix memory...');
 for i = 1:N
@@ -49,26 +52,24 @@ end
 toc %time reading in and scaling
 disp('All images read into memory.');
 
+%% Fix radial distortion
+undistorted = fix_distortion(images, focal_length, k1, k2);
+
 %% Map to cylindrical projection
-mapped_images = mapCylindrical(images, focal_length);
+disp('Mapping images to cylinder.');
+mapped_images = mapCylindrical(undistorted, focal_length);
 %figure;image(squeeze(uint8(mapped_images(1,:,:,:))));
 
-bigim = zeros(size(images,2),size(images,3)*N,3);
-for i=1:N
-    bigim(1:512,1+(384*(i-1)):384*i,:) = mapped_images(i,1:512,1:384,:);
-end
-
-%figure;image(uint8(bigim));
-
-%% Delete black stuff
-%trimmed_mapped_images = trimm(mapped_images);
-
 %% Align and stitch mapped images
-cylinder = align_and_stich(mapped_images);
-figure; image(uint8(cylinder));
+disp('Aligning and stitching images.');
+[pano, offsetX, cumY, start_height] = align_and_stitch(mapped_images);
+figure; image(uint8(pano));
 
-%% Unwrap cylinder
-%output = unwrap(cylinder);
+%% Get drift
+[a, pano_end] = get_drift(mapped_images, offsetX, cumY);
+
+%% Crop and Correct Drift
+final_pano = harvest(pano, a, start_height, pano_end, size(mapped_images,2));
 
 %% Display final image
-%image(output);
+figure; image(uint8(final_pano));
