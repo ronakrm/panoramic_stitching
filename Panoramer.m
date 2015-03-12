@@ -7,7 +7,10 @@ run('../vlfeat-0.9.20/toolbox/vl_setup');
 %% TIMER
 tic; %start stopwatch
 %% Set Parameters
-filename = 'inputs/testingImagesInfo.txt';
+filename = 'inputs/tiltInfo.txt';
+%filename = 'inputs/bestInfo.txt';
+%filename = 'inputs/BBInfo.txt';
+%filename = 'inputs/testingImagesInfo.txt';
 
 %% File Setup
 disp('Beginning Panorama image construction from images in ./');
@@ -23,7 +26,8 @@ k1 = str2num(cell2mat(info(3)));
 k2 = str2num(cell2mat(info(4)));
 width = str2num(cell2mat(info(5)));
 height = str2num(cell2mat(info(6)));
-N = str2num(cell2mat(info(7)));
+is360 = str2num(cell2mat(info(7)));
+N = str2num(cell2mat(info(8)));
 
 disp('Image info acquired.');
 
@@ -66,7 +70,7 @@ disp('Aligning and stitching images.');
 figure; image(uint8(pano));
 
 %% Get drift
-[a, pano_end] = get_drift(mapped_images, offsetX, cumY);
+[a, pano_end] = get_drift(mapped_images, offsetX, cumY, is360);
 
 %% Crop and Correct Drift
 final_pano = harvest(pano, a, start_height, pano_end, size(mapped_images,2));

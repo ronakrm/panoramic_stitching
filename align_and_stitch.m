@@ -8,7 +8,7 @@ alpha = 0.5;
 N = size(mapped_images,1);
 height = size(mapped_images,2);
 width = size(mapped_images,3);
-pano_size = round(0.75*width*N);
+pano_size = round(0.75*width*N*2);
 
 start_height = round((drift_multiplier-1)*height/2.0);
 start_width = 1;
@@ -76,10 +76,19 @@ for i=1:N-1
     scanheight = min(offsetY+height-old_offsetY,old_offsetY+height-offsetY);
     
     % loop over overlap and do intelligent thigns
+ 
+           %graph cut
+        %overlap = (prev_image(old_startY:old_startY+scanheight-1,old_startX:old_startX+scanwidth-1,:) ...
+        %        - next_image(new_startY:new_startY+scanheight-1,new_startX:new_startX+scanwidth-1,:) ).^2;
+       
+    
+    %feathering with linear blending
     for x=1:scanwidth
+        
         new_weight = ((x-1)/(scanwidth-1));
         old_weight = 1 - new_weight;
-        for y=1:scanheight
+        
+         for y=1:scanheight
             old_pixel = prev_image(old_startY+y-1,old_startX+x-1,:);
             new_pixel = next_image(new_startY+y-1,new_startX+x-1,:);
             if (sum(new_pixel) == 0)
@@ -87,6 +96,7 @@ for i=1:N-1
             elseif (sum(old_pixel == 0))
                 pano(y+pano_startY-1,x+offsetX-1,:) = uint8(new_pixel);    
             else
+                %pano(y+pano_startY-1,x+offsetX-1,:) = overlap(
                 pano(y+pano_startY-1,x+offsetX-1,:) = uint8(round(new_weight*new_pixel)) + uint8(round(old_weight*old_pixel));
             end
         end

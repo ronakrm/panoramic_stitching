@@ -15,7 +15,7 @@ end
 
 final_pano = zeros(ceil(height*0.9), pano_end, 3);
 
-final_pano(:,:,:) = almost_pano(ceil(height*0.05):floor(height*0.95),:,:);
+final_pano(:,:,:) = almost_pano(ceil(height*0.05):floor(height*0.95)-1,:,:);
 
 end
 
