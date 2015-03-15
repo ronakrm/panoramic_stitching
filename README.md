@@ -1,5 +1,10 @@
 # CS 766 Panorama Creation Implementation
 
+## Examples
+
+![Test Campus](https://raw.github.com/ronakrm/panoramic_stitching/master/test.jpg)
+![Tilt](https://raw.github.com/ronakrm/panoramic_stitching/master/to_be_vote.jpg)
+
 ## Setup
 Create a directory in the "inputs" with all of the images to be stitched.
 Create a text file in "inputs" that contains information about the panorama, as follows:
@@ -45,8 +50,8 @@ To calculate the best offset from a selection of matches, we use homographies. E
 
 Homographies also allow for any potential mapping to be created from any two different perspectives. These mappings can be used to determine projections between two different spaces, reconstruct alternative views, and create overhead maps with forward-facing cameras. Below, we immplement an interesting application of homographies: inserting one image into another in the receiving image's perspective. By manually creating correspondences between both images, we constrain a homography which we then use to map the rest of the image.
 
-![alt tag](https://raw.github.com/ronakrm/panoramic_stitching/master/homography/Lab.jpg)
-![alt tag](https://raw.github.com/ronakrm/panoramic_stitching/master/homography/homography_fun.jpg)
+![Original Lab Photo](https://raw.github.com/ronakrm/panoramic_stitching/master/homography/Lab.JPG)
+![Homographized Lab Photo with Professor Singh](https://raw.github.com/ronakrm/panoramic_stitching/master/homography/homography_fun.jpg)
 
 You can see that while the homography method does put the source images into the specified destination locations, there are many image manipulation methods that may be applied following their placement to enhance the effect. Lighting plays a strong role in the "authenticity" of the image, and blending edges may make the image appear more natural.
 
