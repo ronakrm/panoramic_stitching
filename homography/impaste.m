@@ -2,7 +2,7 @@
 %   Below is panorama code. works 100% of the time all the time
 
 %% Set Parameters
-filename = 'bestbuyhomInfo.txt';
+filename = 'labInfo.txt';
 
 %% File Setup
 disp(filename);
